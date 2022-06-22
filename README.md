@@ -7,7 +7,7 @@ docker run --mount " 'type=volume,target=/nfs/common,volume-driver=local,volume-
 ```
 Let's see what is going on step-by-step.
 
-##Mount Volume
+## Mount Volume
 In our office we use nfs to storage all the data, which connected to all nodes.
 You can create custom docker volume or use this flag.
 ```shell
@@ -21,23 +21,23 @@ You can create custom docker volume or use this flag.
           file_mode=0777,dir_mode=0777\"'\ 
 ```
 
-##Environment variables
+## Environment variables
 Only last variable is required all of other variables are optional and can be configured manually if you are using Rush. 
 ```shell
-  -e WRAP4DCMD_GALLERY_DIR=/gallery_path \
+  	-e WRAP4DCMD_GALLERY_DIR=/gallery_path \
 	-e WRAP4DCMD_COMMON_DIR=/common_dir_path \
 	-e WRAP4DCMD_LICENSE=7307@lic_server_ip \ 
 	-e RUSH_ADDRESS=http://rush_address:7308 \
-  -e XDG_RUNTIME_DIR=/tmp/runtime-root -i \
+  	-e XDG_RUNTIME_DIR=/tmp/runtime-root -i \
 ```
 
-##Entrypoint
+## Entrypoint
 This entrypoint creates opengl context before wrap have been started.
 ```shell
 --entrypoint /usr/bin/xvfb-run debug-r3dsnode:2022.6.1 -s '+extension GLX +render' \
 ```
 
-##Start Wrap project
+## Start Wrap project
 ```shell
 '/opt/R3DS/Node/WrapCmd.sh' compute -s $start_frame -e $end_frame /nfs/common/WrapProjects/opengl.wrap
 ```
