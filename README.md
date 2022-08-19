@@ -3,13 +3,26 @@
 To run wrap cmd directly from terminal you can use this massive command.
 
 ```shell
-docker run --mount " 'type=volume,target=/nfs/common,volume-driver=local,volume-opt=type=cifs,volume-opt=device=//192.168.0.30/Public,\"volume-opt=o=addr=192.168.0.30,username=user,password=password,file_mode=0777,dir_mode=0777\"'-e WRAP4DCMD_COMMON_DIR=/nfs/common -e WRAP4DCMD_LICENSE=7307@192.168.0.13 -e XDG_RUNTIME_DIR=/tmp/runtime-root -i --entrypoint /usr/bin/xvfb-run debug-r3dsnode:2022.6.1 -s '+extension GLX +render' '/opt/R3DS/Node/WrapCmd.sh' compute -s $start_frame -e $end_frame /nfs/common/WrapProjects/opengl.wrap
+docker run --mount 'type=volume,volume-driver=local,dst=/nfs/common,volume-opt=type=nfs,volume-opt=device=:/Public,"volume-opt=o=addr=192.168.0.3,vers=4,hard,timeo=600,rsize=1048576,wsize=1048576,retrans=2"' -e WRAP4DCMD_COMMON_DIR=/nfs/common -e WRAP4DCMD_LICENSE=7307@192.168.0.13 -e XDG_RUNTIME_DIR=/tmp/runtime-root -i --entrypoint /usr/bin/xvfb-run debug-r3dsnode:2022.6.1 -s '+extension GLX +render' '/opt/R3DS/Node/WrapCmd.sh' compute -s $start_frame -e $end_frame /nfs/common/WrapProjects/opengl.wrap
 ```
 Let's see what is going on step-by-step.
 
 ## Mount Volume
-In our office we use nfs to storage all the data, which connected to all nodes.
+In our office we use nfs to storage all the data in "Public" directory, which connected to all nodes.
 You can create custom docker volume or use this flag.
+
+### NFS **(Recommended)** 
+```shell
+--mount \
+       'type=volume, \
+	volume-driver=local, \ 
+	dst=/nfs/common, \
+	volume-opt=type=nfs, \
+	volume-opt=device=:/Public, \
+       "volume-opt=o=addr=nfs_ip,vers=4,hard,timeo=600,rsize=1048576,wsize=1048576,retrans=2"'
+```
+
+### CIFS
 ```shell
 --mount " \
          'type=volume,target=/nfs/common, \
